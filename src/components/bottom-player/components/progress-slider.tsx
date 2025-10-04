@@ -16,7 +16,7 @@ export const ProgressSlider = ({
 }: ProgressSliderProps) => {
   const TrackJump = useSetAtom(TrackState.TrackJump);
 
-  //  store a temp value for progress slider , avoid unnecessary re-renders
+  //  store a temp value for progress slider , avoid unnecessary re-renders when dragging the slider
   const [innerValue, setInnerValue] = useState(value);
 
   //  update innerValue when value changes
