@@ -2,27 +2,32 @@ import { fromMsToTimeString } from "@/lib/utils";
 import { ArLink } from "../ar-link";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Toggle } from "../ui/toggle";
-import { TrackApis } from "@/apis/track";
 import { TrackState } from "@/atoms/track-atoms";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
+import classNames from "classnames";
 
 interface LongSongCardProps {
   track: any;
 }
 
 export const LongSongCard = ({ track }: LongSongCardProps) => {
-  const play = useSetAtom(TrackState.play);
+  const play = useSetAtom(TrackState.StartPlay);
+  const currentTrackId = useAtomValue(TrackState.CurrentTrackId);
   const handleDoubleClick = () => {
-    TrackApis.getMusicUrl([track.id]).then((res: any) => {
-      console.log(res.data[0].url);
-      play(res.data[0].url);
-    });
+    console.log(track);
+    play(track);
   };
   return (
-    <Button variant="ghost" asChild className="px-2 py-8 w-full">
+    <Button
+      variant="ghost"
+      asChild
+      className="px-2 py-8 w-full mb-2 active:scale-[99.5%]"
+    >
       <div
-        className="flex items-center gap-4 active:scale-99"
+        className={classNames(
+          "flex items-center gap-4 hover:cursor-pointer tracking-normal transition-all duration-100 ",
+          { "bg-accent": currentTrackId === track.id },
+        )}
         onDoubleClick={handleDoubleClick}
       >
         <div className="flex-[1.5] flex flex-row min-w-0 ">

@@ -5,26 +5,28 @@ import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { useEffect } from "react";
 
 export const TrackBaseController = () => {
-  const playOrPause = useSetAtom(TrackState.PlayOrPause);
+  const playing = useAtomValue(TrackState.IsPlaying);
 
-  const isPause = useAtomValue(TrackState.IsPause);
+  const playOrPause = useSetAtom(TrackState.PlayOrPause);
   return (
-    <div className="flex flex-row items-center">
-      <Button variant="click-shrink" size="icon">
-        <SkipBack />
-      </Button>
-      <Button
-        variant="click-shrink"
-        size="icon"
-        onClick={() => {
-          playOrPause();
-        }}
-      >
-        {isPause ? <Play /> : <Pause />}
-      </Button>
-      <Button variant="click-shrink" size="icon">
-        <SkipForward />
-      </Button>
+    <div>
+      <div className="flex flex-row items-center">
+        <Button variant="click-shrink" size="icon">
+          <SkipBack />
+        </Button>
+        <Button
+          variant="click-shrink"
+          size="icon"
+          onClick={() => {
+            playOrPause();
+          }}
+        >
+          {playing ? <Pause /> : <Play />}
+        </Button>
+        <Button variant="click-shrink" size="icon">
+          <SkipForward />
+        </Button>
+      </div>
     </div>
   );
 };

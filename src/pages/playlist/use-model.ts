@@ -11,7 +11,6 @@ export const usePlaylistModel = (id?: number) => {
     }
     PlaylistApis.getPlaylistDetail(id).then((res: any) => {
       setPlaylistTrack(res.playlist.tracks);
-      console.log(res.playlist.tracks);
     });
   });
 
