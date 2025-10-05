@@ -1,11 +1,10 @@
 import { PlaylistApis } from "@/apis/playlist";
-import { useMount } from "ahooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const usePlaylistModel = (id?: number) => {
   const [playlistTracks, setPlaylistTrack] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  useMount(() => {
+  useEffect(() => {
     if (!id) {
       return;
     }
@@ -16,7 +15,7 @@ export const usePlaylistModel = (id?: number) => {
       .finally(() => {
         setLoading(false);
       });
-  });
+  }, [id]);
 
   return {
     playlistTracks,

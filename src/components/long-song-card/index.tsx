@@ -61,7 +61,7 @@ export const LongSongCard = ({
           </div>
         </div>
 
-        <div className="text-[10px] font-medium text-ellipsis text-muted-foreground flex-1 hover:underline hover:cursor-pointer">
+        <div className="text-[12px] font-medium text-ellipsis text-muted-foreground flex-1 hover:underline hover:cursor-pointer">
           {isLoading ? (
             <Skeleton className="h-3 w-20 rounded" />
           ) : (
@@ -69,7 +69,7 @@ export const LongSongCard = ({
           )}
         </div>
 
-        <div className="text-[10px] font-medium text-ellipsis text-muted-foreground flex-1 text-right">
+        <div className="text-[12px] font-medium text-ellipsis text-muted-foreground flex-1 text-right">
           {isLoading ? (
             <Skeleton className="h-3 w-10 rounded" />
           ) : (

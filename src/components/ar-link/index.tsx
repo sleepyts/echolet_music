@@ -6,7 +6,7 @@ interface ArLinkProps {
 
 export const ArLink = ({ artits }: ArLinkProps) => {
   return (
-    <span className="overflow-hidden text-ellipsis whitespace-nowrap min-w-0 text-[10px] font-medium text-muted-foreground">
+    <span className="overflow-hidden text-ellipsis whitespace-nowrap min-w-0 text-[12px] font-medium text-muted-foreground">
       {artits.map((artist, index) => (
         <span
           key={artist.id}
