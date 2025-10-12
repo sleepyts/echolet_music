@@ -20,7 +20,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
 
         "click-shrink":
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 active:scale-95 hover:cursor-pointer",
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 active:scale-97 hover:cursor-pointer",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -33,7 +33,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  },
+  }
 );
 
 function Button({

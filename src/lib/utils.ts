@@ -22,3 +22,7 @@ export function fromMsToTimeString(ms: number) {
 
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
+
+export function fromMsToSecond(ms: number) {
+  return Math.floor(ms / 1000);
+}

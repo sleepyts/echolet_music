@@ -1,8 +1,7 @@
-import type { Profile } from "@/apis/modal";
 import { UserApis } from "@/apis/user";
 import { UserInfoState } from "@/atoms/user-atoms";
 import { useMount } from "ahooks";
-import { atom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 
 export const useAccount = () => {
   const setUserProfile = useSetAtom(UserInfoState.accountProfile);

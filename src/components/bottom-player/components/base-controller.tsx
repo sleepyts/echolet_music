@@ -1,13 +1,15 @@
 import { TrackState } from "@/atoms/track-atoms";
 import { Button } from "@/components/ui/button";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
-import { useEffect } from "react";
 
 export const TrackBaseController = () => {
   const playing = useAtomValue(TrackState.IsPlaying);
 
-  const playOrPause = useSetAtom(TrackState.PlayOrPause);
+  const pause = useSetAtom(TrackState.Pause);
+  const play = useSetAtom(TrackState.Play);
+
+  const playNext = useSetAtom(TrackState.PlayNext);
   return (
     <div>
       <div className="flex flex-row items-center">
@@ -18,12 +20,12 @@ export const TrackBaseController = () => {
           variant="click-shrink"
           size="icon"
           onClick={() => {
-            playOrPause();
+            playing ? pause() : play();
           }}
         >
           {playing ? <Pause /> : <Play />}
         </Button>
-        <Button variant="click-shrink" size="icon">
+        <Button variant="click-shrink" size="icon" onClick={() => playNext()}>
           <SkipForward />
         </Button>
       </div>

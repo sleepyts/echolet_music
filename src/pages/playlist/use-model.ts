@@ -1,5 +1,5 @@
 import { PlaylistApis } from "@/apis/playlist";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const usePlaylistModel = (id?: number) => {
   const [playlistTracks, setPlaylistTrack] = useState<any[]>([]);
@@ -17,8 +17,14 @@ export const usePlaylistModel = (id?: number) => {
       });
   }, [id]);
 
+  const playlistIds = useMemo(
+    () => playlistTracks.map((item) => item.id),
+    [playlistTracks]
+  );
+
   return {
     playlistTracks,
     loading,
+    playlistIds,
   };
 };

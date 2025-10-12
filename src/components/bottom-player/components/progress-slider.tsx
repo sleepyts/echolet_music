@@ -1,35 +1,25 @@
 import { TrackState } from "@/atoms/track-atoms";
 import { Slider } from "@/components/ui/slider";
-import { useUpdateEffect } from "ahooks";
-import { useSetAtom } from "jotai";
-import { useState } from "react";
+import { GlobalAudioFunc } from "@/lib/audio";
+import { useAtomValue } from "jotai";
 interface ProgressSliderProps {
-  value?: number;
-  max?: number;
   step?: number;
 }
 
-export const ProgressSlider = ({
-  value = 0,
-  max = 100,
-  step = 1,
-}: ProgressSliderProps) => {
-  const TrackJump = useSetAtom(TrackState.TrackJump);
-
-  //  store a temp value for progress slider , avoid unnecessary re-renders when dragging the slider
-  const [innerValue, setInnerValue] = useState(value);
-
-  //  update innerValue when value changes
-  useUpdateEffect(() => {
-    setInnerValue(value);
-  }, [value]);
+export const ProgressSlider = ({ step = 1 }: ProgressSliderProps) => {
+  const currentTrackTime = useAtomValue(TrackState.CurrentTrackTime);
+  const currentTrackDuration = useAtomValue(TrackState.CurrentTrackDuration);
 
   return (
     <Slider
-      value={[innerValue]}
-      onValueChange={(value) => setInnerValue(value[0])}
-      onValueCommit={(value) => TrackJump(value[0])}
-      max={max}
+      value={[currentTrackTime]}
+      onValueChange={(value) => {
+        GlobalAudioFunc.jumpTo(value[0]);
+      }}
+      onValueCommit={(value) => {
+        GlobalAudioFunc.jumpTo(value[0]);
+      }}
+      max={currentTrackDuration}
       step={step}
       trackClassName="data-[orientation=horizontal]:h-4 data-[orientation=horizontal]:hover:cursor-pointer "
       rangeClassName="bg-blue-500 data-[orientation=horizontal]:h-0.5 bottom-0"

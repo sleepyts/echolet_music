@@ -1,95 +1,121 @@
 import { TrackApis } from "@/apis/track";
 import { APP_CONSTANTS } from "@/lib/consts";
+import { fromMsToSecond } from "@/lib/utils";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
+import { PlayerState } from "./player-atoms";
+import { GlobalAudioFunc } from "@/lib/audio";
 
-const GlobalAudioAtom = atom<HTMLAudioElement>(new Audio());
+const GlobalAudio = new Audio();
 
 interface TrackState {
   track: any;
 
-  playing: boolean;
+  trackUrl: string;
 
-  currentTime: number;
+  playing: boolean;
 
   duration: number;
 }
+
+// as a single atom to avoid write localstorage when change
+const CurrentTrackTimeAtom = atom<number>(0);
 
 const CurrentTrackAtom = atomWithStorage<TrackState>(
   APP_CONSTANTS.TRACK_STORAGE_KEY,
   {
     track: null,
     playing: false,
-    currentTime: 0,
     duration: 0,
-  },
+    trackUrl: "",
+  }
 );
 
 const IsPlayingAtom = atom((get) => get(CurrentTrackAtom).playing);
 
 const CurrentTrackIdAtom = atom((get) => get(CurrentTrackAtom).track?.id);
 
-const CurrentTrackTimeAtom = atom((get) => get(CurrentTrackAtom).currentTime);
-
 const CurrentTrackDurationAtom = atom((get) => get(CurrentTrackAtom).duration);
 
-const StartPlayAction = atom(null, (get, set, track: any) => {
-  const audio = get(GlobalAudioAtom);
+const CurrentTrackUrlAtom = atom((get) => get(CurrentTrackAtom).trackUrl);
+
+// start play a track when double click the track card
+const StartPlayAction = atom(
+  null,
+  (get, set, track: any, playlistIds?: number[]) => {
+    console.log(track);
+    const prevTrack = get(CurrentTrackAtom);
+    const prevPlaylistIds = get(PlayerState.current).playlistIds;
+
+    TrackApis.getMusicUrl([track.id]).then((res: any) => {
+      GlobalAudioFunc.startANewTrack(res?.data?.[0]?.url || "", () => {
+        set(CurrentTrackAtom, {
+          ...prevTrack,
+          playing: true,
+          track,
+          currentTime: 0,
+          duration: fromMsToSecond(track?.dt),
+          trackUrl: res?.data?.[0]?.url || "",
+        });
+
+        set(PlayerState.current, {
+          ...get(PlayerState.current),
+          playlistIds: playlistIds || prevPlaylistIds || [track?.id],
+        });
+      });
+    });
+  }
+);
+
+// pause current track when click pause button
+const PauseAction = atom(null, (get, set) => {
   const prevTrack = get(CurrentTrackAtom);
 
-  TrackApis.getMusicUrl([track.id]).then((res: any) => {
-    const url = res.data[0].url;
-    audio.src = url;
-    audio.play().then(() => {
-      set(CurrentTrackAtom, {
-        ...prevTrack,
-        playing: true,
-        track,
-        duration: audio.duration,
-        currentTime: 0,
-      });
+  GlobalAudioFunc.togglePlay(() => {
+    set(CurrentTrackAtom, {
+      ...prevTrack,
+      playing: false,
     });
   });
 });
 
-const PlayOrPauseAction = atom(null, (get, set) => {
-  const audio = get(GlobalAudioAtom);
+// play current track when click play button
+const PlayAction = atom(null, (get, set) => {
   const prevTrack = get(CurrentTrackAtom);
 
-  if (prevTrack.playing) {
-    audio.pause();
-    set(CurrentTrackAtom, { ...prevTrack, playing: false });
-  } else {
-    audio.play();
-    set(CurrentTrackAtom, { ...prevTrack, playing: true });
-  }
+  GlobalAudioFunc.togglePlay(() => {
+    set(CurrentTrackAtom, {
+      ...prevTrack,
+      playing: true,
+    });
+  });
 });
 
-const OnAudioTimeChange = atom(null, (get, set) => {
-  const audio = get(GlobalAudioAtom);
-  const prevTrack = get(CurrentTrackAtom);
+const PlayNextAction = atom(null, (get, set) => {
+  const currentTrackId = get(CurrentTrackIdAtom);
+  const nextTrackId = set(
+    PlayerState.generateNextTrackId,
+    true,
+    currentTrackId
+  );
 
-  set(CurrentTrackAtom, { ...prevTrack, currentTime: audio.currentTime });
+  TrackApis.getTrackDetail([nextTrackId]).then((res: any) => {
+    if (res?.songs?.[0]) {
+      set(StartPlayAction, res?.songs?.[0]);
+    }
+  });
 });
-
-const TrackJumpAction = atom(null, (get, set, time: number) => {
-  const audio = get(GlobalAudioAtom);
-  const prevTrack = get(CurrentTrackAtom);
-
-  audio.currentTime = time;
-  set(CurrentTrackAtom, { ...prevTrack, currentTime: time });
-});
-
 export const TrackState = {
-  GlobalAudio: GlobalAudioAtom,
+  GlobalAudio,
   CurrentTrack: CurrentTrackAtom,
   IsPlaying: IsPlayingAtom,
   CurrentTrackId: CurrentTrackIdAtom,
   CurrentTrackTime: CurrentTrackTimeAtom,
   CurrentTrackDuration: CurrentTrackDurationAtom,
+  CurrentTrackUrl: CurrentTrackUrlAtom,
 
   StartPlay: StartPlayAction,
-  PlayOrPause: PlayOrPauseAction,
-  OnAudioTimeChange: OnAudioTimeChange,
-  TrackJump: TrackJumpAction,
+  Pause: PauseAction,
+  Play: PlayAction,
+  PlayNext: PlayNextAction,
 };

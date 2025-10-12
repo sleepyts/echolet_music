@@ -19,9 +19,6 @@ export const LazyAvatar = ({
   alt = "",
   inView = false,
 }: LazyAvatarProps) => {
-  useEffect(() => {
-    console.log(inView);
-  }, [inView]);
   if (inView) {
     return (
       <Avatar className="rounded-[4px] w-12 h-12">

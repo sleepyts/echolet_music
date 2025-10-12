@@ -10,18 +10,21 @@ import classNames from "classnames";
 interface LongSongCardProps {
   track?: any;
   isLoading?: boolean;
+
+  playlistIds?: number[];
 }
 
 export const LongSongCard = ({
   track,
   isLoading = false,
+  playlistIds = [],
 }: LongSongCardProps) => {
   const play = useSetAtom(TrackState.StartPlay);
   const currentTrackId = useAtomValue(TrackState.CurrentTrackId);
 
   const handleDoubleClick = () => {
     if (!track) return;
-    play(track);
+    play(track, playlistIds);
   };
 
   return (
@@ -33,7 +36,7 @@ export const LongSongCard = ({
       <div
         className={classNames(
           "flex items-center gap-4 hover:cursor-pointer tracking-normal transition-all duration-100",
-          { "bg-accent": !isLoading && currentTrackId === track?.id },
+          { "bg-accent": !isLoading && currentTrackId === track?.id }
         )}
         onDoubleClick={handleDoubleClick}
       >
