@@ -4,6 +4,7 @@ import { AppSidebar } from "../app-sidebar";
 import { navigatorRef } from "@/lib/utils";
 import { AppHeader } from "../app-header/indext";
 import { BottomPlayer } from "../bottom-player";
+import { APP_CONSTANTS } from "@/lib/consts";
 export const Layout = () => {
   const navigate = useNavigate();
   navigatorRef.current = navigate;
@@ -15,7 +16,10 @@ export const Layout = () => {
         <nav>
           <AppHeader />
         </nav>
-        <div className="flex-1 overflow-y-auto scrollbar-hide p-4">
+        <div
+          className="overflow-y-auto scrollbar-hide p-4 flex-1"
+          id={APP_CONSTANTS.APP_MAIN_CONTAINER_ID}
+        >
           <Outlet />
         </div>
         <BottomPlayer />

@@ -1,4 +1,4 @@
-import { go } from "@/lib/utils";
+import { RouteUtils } from "@/lib/utils";
 
 interface ArLinkProps {
   artits: any[];
@@ -11,7 +11,7 @@ export const ArLink = ({ artits }: ArLinkProps) => {
         <span
           key={artist.id}
           className="hover:cursor-pointer hover:underline"
-          onClick={() => go(`/artist/${artist.id}`)}
+          onClick={() => RouteUtils.go(`/artist/${artist.id}`)}
         >
           {artist.name}
           {index < artits.length - 1 && " / "}

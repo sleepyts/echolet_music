@@ -3,17 +3,16 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import SidebarFooter from "./components/sidebar-footer";
-import { AudioWaveform, Settings } from "lucide-react";
+import { AudioWaveform } from "lucide-react";
 import { t } from "i18next";
 import { Link } from "react-router-dom";
 import { MineContent } from "./components/content-mine";
+import { MyPlaylist } from "./components/content-mine/my-playlist";
 
 export function AppSidebar() {
   const items = [
@@ -44,6 +43,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
         <MineContent />
+        <MyPlaylist />
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>

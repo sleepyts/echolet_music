@@ -21,7 +21,7 @@ export const ProgressSlider = ({ step = 1 }: ProgressSliderProps) => {
       }}
       max={currentTrackDuration}
       step={step}
-      trackClassName="data-[orientation=horizontal]:h-4 data-[orientation=horizontal]:hover:cursor-pointer "
+      trackClassName="data-[orientation=horizontal]:h-1 data-[orientation=horizontal]:hover:cursor-pointer "
       rangeClassName="bg-blue-500 data-[orientation=horizontal]:h-0.5 bottom-0"
       thumbClassName="hover:cursor-pointer size-0 bg-blue-500 hover:ring-0"
     />

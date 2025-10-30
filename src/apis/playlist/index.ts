@@ -44,9 +44,22 @@ const getPlaylistDetail = (id: number) => {
     })
     .json();
 };
+
+const getPlaylistTrack = (
+  id: number,
+  limit: number = 30,
+  offset: number = 0
+) => {
+  return http
+    .get("playlist/track/all", {
+      searchParams: { id, limit, offset },
+    })
+    .json();
+};
 export const PlaylistApis = {
   getUserRecommendPlaylist,
   getUserLikePlaylist,
   getUserPlaylist,
   getPlaylistDetail,
+  getPlaylistTrack,
 };

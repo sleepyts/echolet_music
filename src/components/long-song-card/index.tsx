@@ -1,4 +1,3 @@
-import { fromMsToTimeString } from "@/lib/utils";
 import { ArLink } from "../ar-link";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
@@ -6,6 +5,7 @@ import { Skeleton } from "../ui/skeleton";
 import { TrackState } from "@/atoms/track-atoms";
 import { useAtomValue, useSetAtom } from "jotai";
 import classNames from "classnames";
+import { TimeUtils } from "@/lib/utils";
 
 interface LongSongCardProps {
   track?: any;
@@ -31,7 +31,7 @@ export const LongSongCard = ({
     <Button
       variant="ghost"
       asChild
-      className="px-2 py-8 w-full mb-2 active:scale-[99.5%]"
+      className=" w-full mb-2 active:scale-[99.5%] h-fit"
     >
       <div
         className={classNames(
@@ -45,7 +45,10 @@ export const LongSongCard = ({
             {isLoading ? (
               <Skeleton className="w-12 h-12 rounded-[4px]" />
             ) : (
-              <AvatarImage src={track.al.picUrl} alt={track.name} />
+              <AvatarImage
+                src={`${track.al.picUrl}?param=120y120`}
+                alt={track.name}
+              />
             )}
           </Avatar>
 
@@ -76,7 +79,7 @@ export const LongSongCard = ({
           {isLoading ? (
             <Skeleton className="h-3 w-10 rounded" />
           ) : (
-            fromMsToTimeString(track.dt)
+            TimeUtils.fromMsToTimeString(track.dt)
           )}
         </div>
       </div>

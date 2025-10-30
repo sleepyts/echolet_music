@@ -9,20 +9,23 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { go } from "@/lib/utils";
 import { useMount } from "ahooks";
 import { t } from "i18next";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { Heart, History } from "lucide-react";
-import { useState } from "react";
+import { UserPlaylistState } from "@/atoms/playlist-atoms";
+import { RouteUtils } from "@/lib/utils";
+import { MyPlaylist } from "./my-playlist";
 
 export const MineContent = () => {
   const uid = useAtomValue(UserInfoState.accountUid);
 
-  const [playlists, setPlaylists] = useState<any[]>([]);
+  const [playlists, setPlaylists] = useAtom(UserPlaylistState.userPlaylist);
   useMount(() => {
     PlaylistApis.getUserPlaylist(uid || 0).then((res: any) => {
       setPlaylists(res.playlist || []);
+
+      console.log(res);
     });
   });
   return (
@@ -33,15 +36,15 @@ export const MineContent = () => {
         <SidebarMenu className="gap-2">
           <SidebarMenuItem>
             <SidebarMenuButton
-              onClick={() => go(`/playlist/${playlists[0].id}`)}
+              onClick={() => RouteUtils.go(`/playlist/${playlists[0].id}`)}
             >
-              <Heart />
+              <Heart className="size-[12px]" />
               {t("sidebar.my-like")}
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton>
-              <History />
+              <History className="size-[12px]" />
               {t("recent-play")}
             </SidebarMenuButton>
           </SidebarMenuItem>

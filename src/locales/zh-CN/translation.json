@@ -5,5 +5,13 @@
   "click-to-login": "点击登录",
   "sidebar.my-like": "我喜欢的音乐",
 
-  "recent-play": "最近播放"
+  "recent-play": "最近播放",
+
+  "play-track": "播放",
+  "play-next-track": "下一首播放",
+
+  "like": "喜欢",
+  "add-to-playlist": "添加到播放列表",
+
+  "sidebar.my-playlist": "自建歌单"
 }

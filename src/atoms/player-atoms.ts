@@ -2,6 +2,7 @@ import { APP_CONSTANTS } from "@/lib/consts";
 import { PlayModeEnum } from "@/lib/enums";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
+import { TrackState } from "./track-atoms";
 
 // track player state
 interface PlayerState {
@@ -21,16 +22,9 @@ const DEFAULT_PLAYER_STATE: PlayerState = {
 const currentPlayModeAtom = atom((get) => get(playerStateAtom).playMode);
 const generateNextTrackIdAction = atom(
   (get) => get(playerStateAtom),
-  (
-    get,
-    _set,
-    isPlayDoneGenerated: boolean,
-    currentTrackId: number,
-    isBackward?: boolean
-  ) => {
+  (get, _set, isPlayDoneGenerated: boolean, isBackward?: boolean) => {
     const { playMode, playlistIds } = get(playerStateAtom);
-
-    console.log(playlistIds.indexOf(currentTrackId));
+    const currentTrackId = get(TrackState.CurrentTrackId);
     if (!isBackward) {
       switch (playMode) {
         // sequence play mode , return next track id
@@ -40,7 +34,7 @@ const generateNextTrackIdAction = atom(
           ];
         // loop play mode, return current track id if play done generated, otherwise return next track id
         case PlayModeEnum.Loop:
-          return !isPlayDoneGenerated
+          return isPlayDoneGenerated
             ? currentTrackId
             : playlistIds[
                 (playlistIds.indexOf(currentTrackId) + 1) % playlistIds.length
@@ -69,7 +63,7 @@ const generateNextTrackIdAction = atom(
           ];
         // loop play mode, return current track id if play done generated, otherwise return next track id
         case PlayModeEnum.Loop:
-          return !isPlayDoneGenerated
+          return isPlayDoneGenerated
             ? currentTrackId
             : playlistIds[
                 (playlistIds.indexOf(currentTrackId) - 1 + playlistIds.length) %

@@ -10,8 +10,6 @@ export const useAudio = () => {
 
   const generateNextTrackId = useSetAtom(PlayerState.generateNextTrackId);
 
-  const currentTrackId = useAtomValue(TrackState.CurrentTrackId);
-
   const startPlay = useSetAtom(TrackState.StartPlay);
   useMount(() => {
     GlobalAudioFunc.registerUpdateCurrentTime((currentTime) => {
@@ -19,11 +17,8 @@ export const useAudio = () => {
     });
 
     GlobalAudioFunc.registerOnEnded(() => {
-      console.log("onEnded");
-      const nextTrackId = generateNextTrackId(true, currentTrackId);
-
+      const nextTrackId = generateNextTrackId(true);
       TrackApis.getTrackDetail([nextTrackId]).then((res: any) => {
-        console.log("getTrackDetail", res);
         if (res?.songs?.[0]) {
           startPlay(res?.songs?.[0]);
         }

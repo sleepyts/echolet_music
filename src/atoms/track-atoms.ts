@@ -1,10 +1,10 @@
 import { TrackApis } from "@/apis/track";
 import { APP_CONSTANTS } from "@/lib/consts";
-import { fromMsToSecond } from "@/lib/utils";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { PlayerState } from "./player-atoms";
 import { GlobalAudioFunc } from "@/lib/audio";
+import { TimeUtils } from "@/lib/utils";
 
 const GlobalAudio = new Audio();
 
@@ -43,9 +43,18 @@ const CurrentTrackUrlAtom = atom((get) => get(CurrentTrackAtom).trackUrl);
 const StartPlayAction = atom(
   null,
   (get, set, track: any, playlistIds?: number[]) => {
-    console.log(track);
     const prevTrack = get(CurrentTrackAtom);
     const prevPlaylistIds = get(PlayerState.current).playlistIds;
+
+    GlobalAudioFunc.togglePlay(() =>
+      set(CurrentTrackAtom, {
+        ...prevTrack,
+        playing: false,
+        track,
+        currentTime: 0,
+        duration: TimeUtils.fromMsToSecond(track?.dt || 0),
+      })
+    );
 
     TrackApis.getMusicUrl([track.id]).then((res: any) => {
       GlobalAudioFunc.startANewTrack(res?.data?.[0]?.url || "", () => {
@@ -54,7 +63,7 @@ const StartPlayAction = atom(
           playing: true,
           track,
           currentTime: 0,
-          duration: fromMsToSecond(track?.dt),
+          duration: TimeUtils.fromMsToSecond(track?.dt || 0),
           trackUrl: res?.data?.[0]?.url || "",
         });
 
