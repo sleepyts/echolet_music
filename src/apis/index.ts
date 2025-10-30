@@ -1,4 +1,5 @@
 import ky, { HTTPError, type Options } from "ky";
+import { toast } from "sonner";
 
 // 公共配置
 const baseOptions: Options = {
@@ -24,6 +25,8 @@ const baseOptions: Options = {
     ],
     beforeError: [
       (error: HTTPError) => {
+        console.log(error);
+        toast.error("接口调用出错", { position: "top-right" });
         return error;
       },
     ],

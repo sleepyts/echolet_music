@@ -1,7 +1,9 @@
 import { PlaylistApis } from "@/apis/playlist";
+import { UserPlaylistState } from "@/atoms/playlist-atoms";
 import type { Pagination } from "@/lib/types";
 import { DomUtils } from "@/lib/utils";
 import { useCreation, useInViewport, useUpdateEffect } from "ahooks";
+import { useSetAtom } from "jotai";
 import { useEffect, useState, type RefObject } from "react";
 import { useParams } from "react-router";
 
@@ -11,6 +13,10 @@ export const usePlaylistModel = ({
   bottomLoadMoreRef: RefObject<HTMLDivElement>;
 }) => {
   const [playlistTracks, setPlaylistTrack] = useState<any[]>([]);
+  const [playlistDetail, setCurrentPlaylistDetail] = useState<any>(undefined);
+  const setCurrentPlaylistViewId = useSetAtom(
+    UserPlaylistState.currentPlaylistViewId
+  );
   const [loading, setLoading] = useState(true);
   const id = useParams().id as unknown as number;
 
@@ -23,12 +29,15 @@ export const usePlaylistModel = ({
 
   useEffect(() => {
     DomUtils.scrollAppMainContainerToTop();
+    fetchPlaylistDetail();
     fetchPlaylistTrack(true);
+    setCurrentPlaylistViewId(id);
 
     return () => {
       queueMicrotask(() => {
         setLoading(true);
         setPlaylistTrack([]);
+        setCurrentPlaylistDetail(undefined);
         setHasMore(true);
       });
     };
@@ -67,8 +76,19 @@ export const usePlaylistModel = ({
       });
   };
 
+  const fetchPlaylistDetail = () => {
+    if (!id) {
+      return;
+    }
+
+    PlaylistApis.getPlaylistDetail(id).then((res: any) => {
+      console.log(res.playlist);
+      setCurrentPlaylistDetail(res.playlist);
+    });
+  };
+
   const playlistIds = useCreation(
-    () => playlistTracks.map((item) => item.id),
+    () => playlistDetail?.trackIds?.map((item: any) => item.id),
     [playlistTracks]
   );
 
@@ -82,6 +102,7 @@ export const usePlaylistModel = ({
 
   return {
     playlistTracks,
+    playlistDetail,
     loading,
     playlistIds,
   };

@@ -1,25 +1,30 @@
 import { usePlaylistModel } from "./use-model";
 import { LongSongCard } from "@/components/long-song-card";
 import { LongSongCardContextMenu } from "@/components/long-song-card/components/context-menu";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useRef } from "react";
+import { PlaylistShortInfo } from "./components/playlist-short-info";
 
 export const PlaylistPage = () => {
   const bottomLoadMoreRef = useRef<HTMLDivElement>(null);
 
-  const { playlistTracks, loading, playlistIds } = usePlaylistModel({
-    bottomLoadMoreRef,
-  });
+  const { playlistTracks, loading, playlistIds, playlistDetail } =
+    usePlaylistModel({
+      bottomLoadMoreRef,
+    });
 
   return (
     <div>
+      {!loading && <PlaylistShortInfo playlistDetail={playlistDetail} />}
       {!loading
-        ? playlistTracks.map((track) => (
+        ? playlistTracks.map((track, index) => (
             <LongSongCardContextMenu track={track} playlistIds={playlistIds}>
               <LongSongCard
                 key={track.id}
                 track={track}
                 isLoading={loading}
                 playlistIds={playlistIds}
+                index={index + 1}
               />
             </LongSongCardContextMenu>
           ))

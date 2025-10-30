@@ -13,5 +13,6 @@
   "like": "喜欢",
   "add-to-playlist": "添加到播放列表",
 
-  "sidebar.my-playlist": "自建歌单"
+  "sidebar.my-playlist": "自建歌单",
+  "sidebar.my-subscribed-playlist": "收藏歌单"
 }

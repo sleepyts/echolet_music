@@ -16,6 +16,7 @@ function go(path: string) {
   }
 }
 
+// ====================================
 function fromMsToTimeString(ms: number) {
   const totalSeconds = Math.floor(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
@@ -28,6 +29,7 @@ function fromMsToSecond(ms: number) {
   return Math.floor(ms / 1000);
 }
 
+// ===================================================
 function scrollAppMainContainerToTop(smooth?: boolean) {
   document
     .getElementById(APP_CONSTANTS.APP_MAIN_CONTAINER_ID)

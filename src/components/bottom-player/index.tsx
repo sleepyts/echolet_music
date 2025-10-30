@@ -18,7 +18,7 @@ export const BottomPlayer = () => {
       <div className="bottom-0 left-0 right-0  p-4 border-t flex  border-sky-200 gap-10">
         <div className="flex flex-row flex-1 min-w-0">
           <TrackBaseinfo
-            albumUrl={trackData?.al?.picUrl}
+            albumUrl={`${trackData?.al?.picUrl}?param=32y32`}
             name={trackData?.name}
             artists={trackData?.ar}
           />

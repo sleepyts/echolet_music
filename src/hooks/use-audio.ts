@@ -4,6 +4,7 @@ import { TrackState } from "@/atoms/track-atoms";
 import { GlobalAudioFunc } from "@/lib/audio";
 import { useMount } from "ahooks";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { toast } from "sonner";
 
 export const useAudio = () => {
   const setCurrentTrackTime = useSetAtom(TrackState.CurrentTrackTime);
@@ -23,6 +24,10 @@ export const useAudio = () => {
           startPlay(res?.songs?.[0]);
         }
       });
+    });
+
+    GlobalAudioFunc.registerOnError(() => {
+      toast.error("播放出错", { position: "top-right" });
     });
   });
 };

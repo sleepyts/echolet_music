@@ -9,7 +9,7 @@ export default defineConfig({
   tools: {
     postcss: {
       postcssOptions: {
-        plugins: [require("@tailwindcss/postcss")],
+        plugins: [require("@tailwindcss/postcss"), require("postcss-pxtorem")],
       },
     },
   },

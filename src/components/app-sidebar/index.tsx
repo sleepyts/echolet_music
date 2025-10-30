@@ -13,6 +13,8 @@ import { t } from "i18next";
 import { Link } from "react-router-dom";
 import { MineContent } from "./components/content-mine";
 import { MyPlaylist } from "./components/content-mine/my-playlist";
+import { MySubscribedPlaylist } from "./components/content-mine/my-subscribed";
+import { usePathname } from "@/hooks/use-pathname";
 
 export function AppSidebar() {
   const items = [
@@ -23,6 +25,8 @@ export function AppSidebar() {
       icon: AudioWaveform,
     },
   ];
+
+  const pathname = usePathname();
   return (
     <Sidebar>
       <SidebarContent>
@@ -31,7 +35,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.key}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild isActive={pathname == item.url}>
                     <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
@@ -44,6 +48,7 @@ export function AppSidebar() {
         </SidebarGroup>
         <MineContent />
         <MyPlaylist />
+        <MySubscribedPlaylist />
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>

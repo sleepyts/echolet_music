@@ -57,6 +57,9 @@ const registerOnEnded = (callback: () => void) => {
   globalAudio.addEventListener("ended", callback);
 };
 
+const registerOnError = (callback: () => void) => {
+  globalAudio.addEventListener("error", callback);
+};
 const jumpTo = (time: number) => {
   globalAudio.currentTime = time;
 };
@@ -67,5 +70,7 @@ export const GlobalAudioFunc = {
   registerUpdateCurrentTime,
   registerUpdateVolume,
   jumpTo: withCallback(jumpTo),
+
   registerOnEnded,
+  registerOnError,
 };

@@ -11,12 +11,14 @@ interface LongSongCardProps {
   track?: any;
   isLoading?: boolean;
 
+  index?: number;
   playlistIds?: number[];
 }
 
 export const LongSongCard = ({
   track,
   isLoading = false,
+  index,
   playlistIds = [],
 }: LongSongCardProps) => {
   const play = useSetAtom(TrackState.StartPlay);
@@ -27,6 +29,10 @@ export const LongSongCard = ({
     play(track, playlistIds);
   };
 
+  if (isLoading) {
+    return <LongSongCardSkeleton index={index} />;
+  }
+
   return (
     <Button
       variant="ghost"
@@ -36,53 +42,54 @@ export const LongSongCard = ({
       <div
         className={classNames(
           "flex items-center gap-4 hover:cursor-pointer tracking-normal transition-all duration-100",
-          { "bg-accent": !isLoading && currentTrackId === track?.id }
+          { "bg-accent": currentTrackId === track?.id }
         )}
         onDoubleClick={handleDoubleClick}
       >
+        <div className="w-[12px] text-left">{index}</div>
         <div className="flex-[1.5] flex flex-row min-w-0">
           <Avatar className="rounded-[4px] w-12 h-12">
-            {isLoading ? (
-              <Skeleton className="w-12 h-12 rounded-[4px]" />
-            ) : (
-              <AvatarImage
-                src={`${track.al.picUrl}?param=120y120`}
-                alt={track.name}
-              />
-            )}
+            <AvatarImage
+              src={`${track.al.picUrl}?param=120y120`}
+              alt={track.name}
+            />
           </Avatar>
 
           <div className="flex flex-col text-left ml-3 justify-between min-w-0">
-            {isLoading ? (
-              <>
-                <Skeleton className="h-4 w-32 mb-1 rounded" />
-                <Skeleton className="h-3 w-24 rounded" />
-              </>
-            ) : (
-              <>
-                <span className="truncate">{track.name}</span>
-                <ArLink artits={track.ar} />
-              </>
-            )}
+            <span className="truncate">{track.name}</span>
+            <ArLink artits={track.ar} />
           </div>
         </div>
 
         <div className="text-[12px] font-medium text-ellipsis text-muted-foreground flex-1 hover:underline hover:cursor-pointer">
-          {isLoading ? (
-            <Skeleton className="h-3 w-20 rounded" />
-          ) : (
-            track.al.name
-          )}
+          {track.al.name}
         </div>
 
         <div className="text-[12px] font-medium text-ellipsis text-muted-foreground flex-1 text-right">
-          {isLoading ? (
-            <Skeleton className="h-3 w-10 rounded" />
-          ) : (
-            TimeUtils.fromMsToTimeString(track.dt)
-          )}
+          {TimeUtils.fromMsToTimeString(track.dt)}
         </div>
       </div>
     </Button>
+  );
+};
+
+const LongSongCardSkeleton = ({ index }: { index?: number }) => {
+  return (
+    <div className="flex items-center gap-4 w-full mb-2 h-fit p-2">
+      <div className="w-[12px] text-left text-sm">{index}</div>
+      <div className="flex-[1.5] flex flex-row min-w-0 items-center">
+        <Skeleton className="rounded-[4px] w-12 h-12" />
+        <div className="flex flex-col ml-3 space-y-2">
+          <Skeleton className="h-4 w-32 rounded" />
+          <Skeleton className="h-3 w-24 rounded" />
+        </div>
+      </div>
+      <div className="flex-1">
+        <Skeleton className="h-3 w-20 rounded" />
+      </div>
+      <div className="flex-1 flex justify-end">
+        <Skeleton className="h-3 w-10 rounded" />
+      </div>
+    </div>
   );
 };
