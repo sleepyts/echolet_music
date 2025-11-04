@@ -29,6 +29,18 @@ function fromMsToSecond(ms: number) {
   return Math.floor(ms / 1000);
 }
 
+function fromNumberToMillionOrBillion(num?: number) {
+  if (!num) {
+    return "";
+  }
+  if (num >= 100000000) {
+    return `${(num / 100000000).toFixed(2)}亿`;
+  } else if (num >= 10000) {
+    return `${(num / 10000).toFixed(2)}万`;
+  } else {
+    return num.toString();
+  }
+}
 // ===================================================
 function scrollAppMainContainerToTop(smooth?: boolean) {
   document
@@ -36,9 +48,10 @@ function scrollAppMainContainerToTop(smooth?: boolean) {
     ?.scrollTo({ top: 0, behavior: smooth ? "smooth" : "auto" });
 }
 
-export const TimeUtils = {
+export const FormatUtils = {
   fromMsToTimeString,
   fromMsToSecond,
+  fromNumberToMillionOrBillion,
 };
 
 export const DomUtils = {

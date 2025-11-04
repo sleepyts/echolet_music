@@ -5,7 +5,7 @@ import { Skeleton } from "../ui/skeleton";
 import { TrackState } from "@/atoms/track-atoms";
 import { useAtomValue, useSetAtom } from "jotai";
 import classNames from "classnames";
-import { TimeUtils } from "@/lib/utils";
+import { FormatUtils } from "@/lib/utils";
 
 interface LongSongCardProps {
   track?: any;
@@ -66,7 +66,7 @@ export const LongSongCard = ({
         </div>
 
         <div className="text-[12px] font-medium text-ellipsis text-muted-foreground flex-1 text-right">
-          {TimeUtils.fromMsToTimeString(track.dt)}
+          {FormatUtils.fromMsToTimeString(track.dt)}
         </div>
       </div>
     </Button>

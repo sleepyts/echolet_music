@@ -4,7 +4,7 @@ import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { PlayerState } from "./player-atoms";
 import { GlobalAudioFunc } from "@/lib/audio";
-import { TimeUtils } from "@/lib/utils";
+import { FormatUtils } from "@/lib/utils";
 
 const GlobalAudio = new Audio();
 
@@ -42,7 +42,7 @@ const CurrentTrackUrlAtom = atom((get) => get(CurrentTrackAtom).trackUrl);
 // start play a track when double click the track card
 const StartPlayAction = atom(
   null,
-  (get, set, track: any, playlistIds?: number[]) => {
+  async (get, set, track: any, playlistIds?: number[]) => {
     const prevTrack = get(CurrentTrackAtom);
     const prevPlaylistIds = get(PlayerState.current).playlistIds;
 
@@ -52,18 +52,18 @@ const StartPlayAction = atom(
         playing: false,
         track,
         currentTime: 0,
-        duration: TimeUtils.fromMsToSecond(track?.dt || 0),
+        duration: FormatUtils.fromMsToSecond(track?.dt || 0),
       })
     );
 
-    TrackApis.getMusicUrl([track.id]).then((res: any) => {
+    await TrackApis.getMusicUrl([track.id]).then((res: any) => {
       GlobalAudioFunc.startANewTrack(res?.data?.[0]?.url || "", () => {
         set(CurrentTrackAtom, {
           ...prevTrack,
           playing: true,
           track,
           currentTime: 0,
-          duration: TimeUtils.fromMsToSecond(track?.dt || 0),
+          duration: FormatUtils.fromMsToSecond(track?.dt || 0),
           trackUrl: res?.data?.[0]?.url || "",
         });
 

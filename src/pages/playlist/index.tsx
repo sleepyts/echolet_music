@@ -15,7 +15,12 @@ export const PlaylistPage = () => {
 
   return (
     <div>
-      {!loading && <PlaylistShortInfo playlistDetail={playlistDetail} />}
+      {
+        <PlaylistShortInfo
+          playlistDetail={playlistDetail}
+          isLoading={loading}
+        />
+      }
       {!loading
         ? playlistTracks.map((track, index) => (
             <LongSongCardContextMenu track={track} playlistIds={playlistIds}>

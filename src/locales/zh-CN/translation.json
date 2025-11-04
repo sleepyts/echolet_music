@@ -14,5 +14,10 @@
   "add-to-playlist": "添加到播放列表",
 
   "sidebar.my-playlist": "自建歌单",
-  "sidebar.my-subscribed-playlist": "收藏歌单"
+  "sidebar.my-subscribed-playlist": "收藏歌单",
+
+  "playlist-short-info.dialog-title": "歌单简介",
+  "playlist-short-info.create-at": "创建于",
+  "playlist-short-info.play-all": "播放全部",
+  "playlist-short-info.subscribed": "收藏"
 }

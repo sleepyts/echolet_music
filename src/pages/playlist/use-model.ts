@@ -21,7 +21,7 @@ export const usePlaylistModel = ({
   const id = useParams().id as unknown as number;
 
   const [currentPage, setCurrentPage] = useState<Pagination>({
-    limit: 15,
+    limit: 40,
     offset: 0,
   });
 
@@ -43,20 +43,20 @@ export const usePlaylistModel = ({
     };
   }, [id]);
 
-  const fetchPlaylistTrack = (reset?: boolean) => {
+  const fetchPlaylistTrack = async (reset?: boolean) => {
     if (!id) {
       return;
     }
 
     if (reset) {
       setCurrentPage({
-        limit: 15,
+        limit: 40,
         offset: 0,
       });
     }
-    PlaylistApis.getPlaylistTrack(
+    await PlaylistApis.getPlaylistTrack(
       id,
-      reset ? 15 : currentPage.limit,
+      reset ? 40 : currentPage.limit,
       reset ? 0 : currentPage.offset
     )
       .then(async (res: any) => {
@@ -76,12 +76,12 @@ export const usePlaylistModel = ({
       });
   };
 
-  const fetchPlaylistDetail = () => {
+  const fetchPlaylistDetail = async () => {
     if (!id) {
       return;
     }
 
-    PlaylistApis.getPlaylistDetail(id).then((res: any) => {
+    await PlaylistApis.getPlaylistDetail(id).then((res: any) => {
       console.log(res.playlist);
       setCurrentPlaylistDetail(res.playlist);
     });
