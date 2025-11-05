@@ -1,9 +1,11 @@
+import { TrackState } from "@/atoms/track-atoms";
 import { ArLink } from "@/components/ar-link";
 import TDialog from "@/components/TDialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FormatUtils } from "@/lib/utils";
 import { t } from "i18next";
+import { useSetAtom } from "jotai";
 import {
   FolderCheckIcon,
   FolderHeartIcon,
@@ -13,16 +15,22 @@ import {
 
 interface PlaylistShortInfoProps {
   playlistDetail?: any;
+  playlistIds: number[];
+  playlistTracks: any[];
   isLoading?: boolean;
 }
 
 export const PlaylistShortInfo = ({
   playlistDetail,
   isLoading = false,
+  playlistIds,
+  playlistTracks,
 }: PlaylistShortInfoProps) => {
-  if (isLoading) {
+  if (isLoading && !playlistDetail?.name) {
     return <PlaylistShortInfoSkeleton />;
   }
+
+  const play = useSetAtom(TrackState.StartPlay);
   return (
     <div className="flex flex-row mb-2">
       <div className="relative">
@@ -69,6 +77,7 @@ export const PlaylistShortInfo = ({
           <Button
             className="text-[14px] bg-primary text-primary-foreground  "
             variant={"shrink"}
+            onClick={() => play(playlistTracks?.[0] || "", playlistIds)}
           >
             <PlayIcon />
             {t("playlist-short-info.play-all")}

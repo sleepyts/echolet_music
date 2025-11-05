@@ -19,6 +19,8 @@ export const PlaylistPage = () => {
         <PlaylistShortInfo
           playlistDetail={playlistDetail}
           isLoading={loading}
+          playlistIds={playlistIds}
+          playlistTracks={playlistTracks}
         />
       }
       {!loading

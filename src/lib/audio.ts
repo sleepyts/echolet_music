@@ -36,9 +36,13 @@ const togglePlay = () => {
 };
 
 const startANewTrack = (url: string) => {
-  globalAudio.src = url;
-  globalAudio.load();
+  loadUrl(url);
   globalAudio.play();
+};
+
+const loadUrl = (url: string) => {
+  globalAudio.load();
+  globalAudio.src = url;
 };
 
 const registerUpdateCurrentTime = (callback: (currentTime: number) => void) => {
@@ -67,10 +71,11 @@ const jumpTo = (time: number) => {
 export const GlobalAudioFunc = {
   togglePlay: withCallback(togglePlay),
   startANewTrack: withCallback(startANewTrack),
-  registerUpdateCurrentTime,
-  registerUpdateVolume,
   jumpTo: withCallback(jumpTo),
+  loadUrl: withCallback(loadUrl),
 
   registerOnEnded,
   registerOnError,
+  registerUpdateCurrentTime,
+  registerUpdateVolume,
 };

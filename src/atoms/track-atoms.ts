@@ -4,7 +4,7 @@ import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { PlayerState } from "./player-atoms";
 import { GlobalAudioFunc } from "@/lib/audio";
-import { FormatUtils } from "@/lib/utils";
+import { FormatUtils, LocalStorageUtils } from "@/lib/utils";
 
 const GlobalAudio = new Audio();
 
@@ -20,6 +20,15 @@ interface TrackState {
 
 // as a single atom to avoid write localstorage when change
 const CurrentTrackTimeAtom = atom<number>(0);
+
+const WriteCurrentTrackTimeToCacheAction = atom(null, (get, set) => {
+  LocalStorageUtils.writeLocalStorage(
+    APP_CONSTANTS.TRACK_PLAY_TIME_STORAGE_KEY,
+    {
+      currentTime: get(CurrentTrackTimeAtom),
+    }
+  );
+});
 
 const CurrentTrackAtom = atomWithStorage<TrackState>(
   APP_CONSTANTS.TRACK_STORAGE_KEY,
@@ -100,13 +109,8 @@ const PlayAction = atom(null, (get, set) => {
   });
 });
 
-const PlayNextAction = atom(null, (get, set) => {
-  const currentTrackId = get(CurrentTrackIdAtom);
-  const nextTrackId = set(
-    PlayerState.generateNextTrackId,
-    true,
-    currentTrackId
-  );
+const PlayNextAction = atom(null, (get, set, isBackward?: boolean) => {
+  const nextTrackId = set(PlayerState.generateNextTrackId, false, isBackward);
 
   TrackApis.getTrackDetail([nextTrackId]).then((res: any) => {
     if (res?.songs?.[0]) {
@@ -114,6 +118,12 @@ const PlayNextAction = atom(null, (get, set) => {
     }
   });
 });
+
+const ReloadGlobalAudioAction = atom(null, (get, set) => {
+  GlobalAudioFunc.loadUrl(get(CurrentTrackUrlAtom));
+  GlobalAudioFunc.jumpTo(get(CurrentTrackTimeAtom));
+});
+
 export const TrackState = {
   GlobalAudio,
   CurrentTrack: CurrentTrackAtom,
@@ -122,9 +132,11 @@ export const TrackState = {
   CurrentTrackTime: CurrentTrackTimeAtom,
   CurrentTrackDuration: CurrentTrackDurationAtom,
   CurrentTrackUrl: CurrentTrackUrlAtom,
+  ReloadGlobalAudio: ReloadGlobalAudioAction,
 
   StartPlay: StartPlayAction,
   Pause: PauseAction,
   Play: PlayAction,
   PlayNext: PlayNextAction,
+  WriteCurrentTrackTimeToCache: WriteCurrentTrackTimeToCacheAction,
 };

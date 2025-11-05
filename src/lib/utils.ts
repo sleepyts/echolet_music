@@ -48,6 +48,15 @@ function scrollAppMainContainerToTop(smooth?: boolean) {
     ?.scrollTo({ top: 0, behavior: smooth ? "smooth" : "auto" });
 }
 
+// ===================================================
+function writeLocalStorage(key: string, data: any) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function readLocalStorage(key: string) {
+  return JSON.parse(localStorage.getItem(key) || "{}");
+}
+
 export const FormatUtils = {
   fromMsToTimeString,
   fromMsToSecond,
@@ -60,4 +69,9 @@ export const DomUtils = {
 
 export const RouteUtils = {
   go,
+};
+
+export const LocalStorageUtils = {
+  writeLocalStorage,
+  readLocalStorage,
 };

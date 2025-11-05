@@ -4,7 +4,11 @@ import { pluginReact } from "@rsbuild/plugin-react";
 const isDev = process.env.NODE_ENV === "development";
 const isProd = process.env.NODE_ENV === "production";
 export default defineConfig({
-  plugins: [pluginReact()],
+  plugins: [
+    pluginReact({
+      enableProfiler: isDev,
+    }),
+  ],
 
   tools: {
     postcss: {
@@ -23,6 +27,7 @@ export default defineConfig({
 
   html: {
     template: "./src/index.html",
+    title: "Echolet Music",
   },
   server: {
     port: 5173,

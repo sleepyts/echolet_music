@@ -14,7 +14,7 @@ export const TrackBaseController = () => {
     <div>
       <div className="flex flex-row items-center">
         <Button variant="click-shrink" size="icon">
-          <SkipBack />
+          <SkipBack onClick={() => playNext(true)} />
         </Button>
         <Button
           variant="click-shrink"

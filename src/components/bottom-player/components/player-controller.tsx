@@ -1,4 +1,5 @@
 import { PlayerState } from "@/atoms/player-atoms";
+import { PlayerDetail } from "@/components/player-detail";
 import { Button } from "@/components/ui/button";
 import { PlayModeEnum } from "@/lib/enums";
 import { useMemoizedFn } from "ahooks";
@@ -36,6 +37,8 @@ export const TrackPlayerController = () => {
       >
         {renderPlayModeIcon()}
       </Button>
+
+      <PlayerDetail />
     </div>
   );
 };
