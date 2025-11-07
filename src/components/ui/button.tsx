@@ -22,7 +22,7 @@ const buttonVariants = cva(
         "click-shrink":
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 active:scale-97 hover:cursor-pointer",
 
-        shrink: "active:scale-97 hover:cursor-pointer",
+        shrink: "active:scale-95 hover:cursor-pointer",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

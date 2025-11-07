@@ -56,7 +56,12 @@ export const LongSongCard = ({
           </Avatar>
 
           <div className="flex flex-col text-left ml-3 justify-between min-w-0">
-            <span className="truncate">{track.name}</span>
+            <span className="truncate ">
+              {track.name}
+              <span className="text-[12px] text-muted-foreground ml-1">
+                {track.alia[0] ? `(${track.alia[0]})` : ""}
+              </span>
+            </span>
             <ArLink artits={track.ar} />
           </div>
         </div>

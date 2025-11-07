@@ -1,4 +1,5 @@
 import { TrackApis } from "@/apis/track";
+import { LyricState } from "@/atoms/lyric-atoms";
 import { PlayerState } from "@/atoms/player-atoms";
 import { TrackState } from "@/atoms/track-atoms";
 import { GlobalAudioFunc } from "@/lib/audio";
@@ -22,6 +23,8 @@ export const useAudio = () => {
   );
   const reloadGlobalAudio = useSetAtom(TrackState.ReloadGlobalAudio);
 
+  const setRencentLyricIndex = useSetAtom(LyricState.SetRencentLyricIndex);
+
   useMount(() => {
     // read current track time from local storage
     {
@@ -37,6 +40,7 @@ export const useAudio = () => {
     {
       GlobalAudioFunc.registerUpdateCurrentTime((currentTime) => {
         setCurrentTrackTime(currentTime);
+        setRencentLyricIndex();
       });
 
       GlobalAudioFunc.registerOnEnded(() => {

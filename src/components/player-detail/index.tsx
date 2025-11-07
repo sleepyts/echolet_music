@@ -13,7 +13,7 @@ export function PlayerDetail() {
         </Button>
       </SheetTrigger>
       <SheetContent side="bottom" className="w-full h-full">
-        <div className="flex flex-row">
+        <div className="flex flex-row w-full h-full">
           <PlayerDetailLeftContent />
           <PlayerDetailRightContent />
         </div>

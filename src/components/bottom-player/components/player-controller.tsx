@@ -6,7 +6,11 @@ import { useMemoizedFn } from "ahooks";
 import { useAtomValue, useSetAtom } from "jotai";
 import { HeartIcon, Repeat1Icon, RepeatIcon, ShuffleIcon } from "lucide-react";
 
-export const TrackPlayerController = () => {
+export const TrackPlayerController = ({
+  withDetail = true,
+}: {
+  withDetail?: boolean;
+}) => {
   const changePlayMode = useSetAtom(PlayerState.changePlayMode);
 
   const currentPlayMode = useAtomValue(PlayerState.currentPlayMode);
@@ -38,7 +42,7 @@ export const TrackPlayerController = () => {
         {renderPlayModeIcon()}
       </Button>
 
-      <PlayerDetail />
+      {withDetail && <PlayerDetail />}
     </div>
   );
 };

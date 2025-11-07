@@ -166,4 +166,5 @@
 html,
 body {
   overscroll-behavior: none; /* 禁止滚动链和回弹 */
+  font-family: "Rubik", "Noto Sans SC", sans-serif;
 }

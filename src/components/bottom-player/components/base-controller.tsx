@@ -1,9 +1,10 @@
 import { TrackState } from "@/atoms/track-atoms";
 import { Button } from "@/components/ui/button";
+import classNames from "classnames";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 
-export const TrackBaseController = () => {
+export const TrackBaseController = ({ className }: { className?: string }) => {
   const playing = useAtomValue(TrackState.IsPlaying);
 
   const pause = useSetAtom(TrackState.Pause);
@@ -12,7 +13,7 @@ export const TrackBaseController = () => {
   const playNext = useSetAtom(TrackState.PlayNext);
   return (
     <div>
-      <div className="flex flex-row items-center">
+      <div className={classNames("flex flex-row items-center", className)}>
         <Button variant="click-shrink" size="icon">
           <SkipBack onClick={() => playNext(true)} />
         </Button>

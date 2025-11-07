@@ -20,7 +20,18 @@ const getMusicUrl = (ids: number[], level: string = "standard") => {
     })
     .json();
 };
+
+const getLyric = (id: number) => {
+  return http
+    .get("lyric", {
+      searchParams: {
+        id: id,
+      },
+    })
+    .json();
+};
 export const TrackApis = {
   getTrackDetail,
   getMusicUrl,
+  getLyric,
 };

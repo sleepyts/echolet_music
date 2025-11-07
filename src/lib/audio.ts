@@ -35,9 +35,11 @@ const togglePlay = () => {
   }
 };
 
-const startANewTrack = (url: string) => {
+const startANewTrack = async (url: string) => {
+  jumpTo(0);
+  globalAudio.pause();
   loadUrl(url);
-  globalAudio.play();
+  await globalAudio.play();
 };
 
 const loadUrl = (url: string) => {
