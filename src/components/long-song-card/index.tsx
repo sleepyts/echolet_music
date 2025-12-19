@@ -46,12 +46,13 @@ export const LongSongCard = ({
         )}
         onDoubleClick={handleDoubleClick}
       >
-        <div className="w-[12px] text-left">{index}</div>
+        <div className="text-center w-[12px] mr-2">{index}</div>
         <div className="flex-[1.5] flex flex-row min-w-0">
           <Avatar className="rounded-[4px] w-12 h-12">
             <AvatarImage
               src={`${track.al.picUrl}?param=120y120`}
               alt={track.name}
+              loading="lazy"
             />
           </Avatar>
 

@@ -1,11 +1,13 @@
 import { TrackState } from "@/atoms/track-atoms";
+import { UserInfoState } from "@/atoms/user-atoms";
 import { ArLink } from "@/components/ar-link";
 import TDialog from "@/components/TDialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PlaylistTypeEnum } from "@/lib/enums";
 import { FormatUtils } from "@/lib/utils";
 import { t } from "i18next";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
   FolderCheckIcon,
   FolderHeartIcon,
@@ -31,8 +33,9 @@ export const PlaylistShortInfo = ({
   }
 
   const play = useSetAtom(TrackState.StartPlay);
+  const accountUid = useAtomValue(UserInfoState.accountUid);
   return (
-    <div className="flex flex-row mb-2">
+    <div className="flex flex-row mb-[24px]">
       <div className="relative">
         <img
           src={`${playlistDetail?.coverImgUrl}?param=400y400`}
@@ -83,16 +86,19 @@ export const PlaylistShortInfo = ({
             {t("playlist-short-info.play-all")}
           </Button>
 
-          <Button
-            className="text-[14px] bg-accent text-accent-foreground  "
-            variant={"shrink"}
-          >
-            {playlistDetail?.subscribed ? (
-              <FolderCheckIcon />
-            ) : (
-              <FolderHeartIcon />
-            )}
-          </Button>
+          {/* only show subscribe button when playlist is not created by current user */}
+          {accountUid !== playlistDetail?.userId && (
+            <Button
+              className="text-[14px] bg-accent text-accent-foreground  "
+              variant={"shrink"}
+            >
+              {playlistDetail?.subscribed ? (
+                <FolderCheckIcon />
+              ) : (
+                <FolderHeartIcon />
+              )}
+            </Button>
+          )}
         </div>
       </div>
     </div>

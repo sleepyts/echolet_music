@@ -8,14 +8,16 @@ import { APP_CONSTANTS } from "@/lib/consts";
 import { Toaster } from "sonner";
 export const Layout = () => {
   const navigate = useNavigate();
+
+  // ts-ignore 忽略 navigatorRef.current 只读属性
   navigatorRef.current = navigate;
 
   return (
     <>
       <Toaster className="w-screen h-screen" />
-      <SidebarProvider open>
+      <SidebarProvider open className="justify-between">
         <AppSidebar />
-        <main className=" w-full flex flex-col h-screen">
+        <main className="w-full flex flex-col h-screen overflow-auto">
           <nav>
             <AppHeader />
           </nav>

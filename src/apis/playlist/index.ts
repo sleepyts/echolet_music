@@ -56,10 +56,19 @@ const getPlaylistTrack = (
     })
     .json();
 };
+
+const getRecommendResource = () => {
+  return http
+    .get("homepage/block/page", {
+      searchParams: { refresh: true, timestamp: Date.now() },
+    })
+    .json();
+};
 export const PlaylistApis = {
   getUserRecommendPlaylist,
   getUserLikePlaylist,
   getUserPlaylist,
   getPlaylistDetail,
   getPlaylistTrack,
+  getRecommendResource,
 };

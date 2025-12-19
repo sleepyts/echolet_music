@@ -1,4 +1,5 @@
 const globalAudio = new Audio();
+globalAudio.volume=0.5
 const withCallback = <T extends any[], R>(originalFunc: (...args: T) => R) => {
   type ArgsWithCallback = T extends [...infer Rest]
     ? [...Rest, ((result: R) => void)?]

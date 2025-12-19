@@ -43,7 +43,7 @@ const PlayerDetailRightContent = () => {
                   GlobalAudioFunc.jumpTo(time);
                 }}
                 className={classNames(
-                  "w-full justify-start h-auto px-2 py-3 rounded-md transition-colors duration-300 text-left",
+                  "justify-start h-auto px-2 py-3 rounded-md transition-colors duration-300 text-left overflow-visible",
                   {
                     "bg-accent": currentLyricIndex === index,
                     // center align

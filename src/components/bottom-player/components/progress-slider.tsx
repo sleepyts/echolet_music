@@ -2,8 +2,10 @@ import { TrackState } from "@/atoms/track-atoms";
 import { Slider } from "@/components/ui/slider";
 import { GlobalAudioFunc } from "@/lib/audio";
 import { FormatUtils } from "@/lib/utils";
+import { useUpdateEffect } from "ahooks";
 import classNames from "classnames";
 import { useAtomValue } from "jotai";
+import { useState } from "react";
 interface ProgressSliderProps {
   step?: number;
 
@@ -17,6 +19,12 @@ export const ProgressSlider = ({
   const currentTrackTime = useAtomValue(TrackState.CurrentTrackTime);
   const currentTrackDuration = useAtomValue(TrackState.CurrentTrackDuration);
 
+  const [innerValue, setInnerValue] = useState(currentTrackTime);
+  const [changingValue, setChangingValue] = useState(false);
+  useUpdateEffect(() => {
+    if (changingValue) return;
+    setInnerValue(currentTrackTime);
+  }, [currentTrackTime]);
   return (
     <div
       className={classNames(
@@ -25,14 +33,16 @@ export const ProgressSlider = ({
       )}
     >
       <span className="text-[12px] text-muted-foreground">
-        {FormatUtils.fromSsToTimeString(currentTrackTime)}
+        {FormatUtils.fromSsToTimeString(innerValue)}
       </span>
       <Slider
-        value={[currentTrackTime]}
+        value={[innerValue]}
         onValueChange={(value) => {
-          GlobalAudioFunc.jumpTo(value[0]);
+          setChangingValue(true);
+          setInnerValue(value[0]);
         }}
         onValueCommit={(value) => {
+          setChangingValue(false);
           GlobalAudioFunc.jumpTo(value[0]);
         }}
         max={currentTrackDuration}
