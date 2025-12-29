@@ -67,7 +67,7 @@ export const LongSongCard = ({
           </div>
         </div>
 
-        <div className="text-[12px] font-medium text-ellipsis text-muted-foreground flex-1 hover:underline hover:cursor-pointer">
+        <div className="text-[12px] font-medium text-ellipsis text-muted-foreground flex-2 hover:underline hover:cursor-pointer text-left">
           {track.al.name}
         </div>
 

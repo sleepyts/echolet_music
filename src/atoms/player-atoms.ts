@@ -22,9 +22,9 @@ const DEFAULT_PLAYER_STATE: PlayerState = {
 const currentPlayModeAtom = atom((get) => get(playerStateAtom).playMode);
 const generateNextTrackIdAction = atom(
   (get) => get(playerStateAtom),
-  (get, _set, isPlayDoneGenerated: boolean, isBackward?: boolean) => {
+  async (get, _set, isPlayDoneGenerated: boolean, isBackward?: boolean) => {
     const { playMode, playlistIds } = get(playerStateAtom);
-    const currentTrackId = get(TrackState.CurrentTrackId);
+    const currentTrackId = await get(TrackState.CurrentTrackId);
     if (!isBackward) {
       switch (playMode) {
         // sequence play mode , return next track id

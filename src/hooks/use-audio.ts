@@ -4,11 +4,11 @@ import { PlayerState } from "@/atoms/player-atoms";
 import { TrackState } from "@/atoms/track-atoms";
 import { GlobalAudioFunc } from "@/lib/audio";
 import { APP_CONSTANTS } from "@/lib/consts";
-import { LocalStorageUtils } from "@/lib/utils";
+import { appStore } from "@/lib/store";
 import { useMount } from "ahooks";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { toast } from "sonner";
-
+import { getCurrentWindow } from "@tauri-apps/api/window";
 export const useAudio = () => {
   const setCurrentTrackTime = useSetAtom(TrackState.CurrentTrackTime);
 
@@ -25,14 +25,15 @@ export const useAudio = () => {
 
   const setRencentLyricIndex = useSetAtom(LyricState.SetRencentLyricIndex);
 
-  useMount(() => {
+  const playNext = useSetAtom(TrackState.PlayNext);
+
+  useMount(async () => {
     // read current track time from local storage
     {
-      const currentTrackTime =
-        LocalStorageUtils.readLocalStorage(
-          APP_CONSTANTS.TRACK_PLAY_TIME_STORAGE_KEY
-        )?.currentTime || 0;
-      setCurrentTrackTime(currentTrackTime);
+      const currentTrackTime = await appStore.get<{ currentTime: number }>(
+        APP_CONSTANTS.TRACK_PLAY_TIME_STORAGE_KEY
+      );
+      setCurrentTrackTime(currentTrackTime?.currentTime || 0);
       reloadGlobalAudio();
     }
 
@@ -43,9 +44,9 @@ export const useAudio = () => {
         setRencentLyricIndex();
       });
 
-      GlobalAudioFunc.registerOnEnded(() => {
-        const nextTrackId = generateNextTrackId(true);
-        TrackApis.getTrackDetail([nextTrackId]).then((res: any) => {
+      GlobalAudioFunc.registerOnEnded(async () => {
+        const nextTrackId = await generateNextTrackId(true);
+        await TrackApis.getTrackDetail([nextTrackId]).then((res: any) => {
           if (res?.songs?.[0]) {
             startPlay(res?.songs?.[0]);
           }
@@ -54,14 +55,17 @@ export const useAudio = () => {
 
       GlobalAudioFunc.registerOnError(() => {
         toast.error("播放出错", { position: "top-right" });
+        playNext();
       });
     }
 
-    // write current track time to local storage when unload page
+    // write current track time to local storage when close window
     {
-      window.addEventListener("beforeunload", () => {
+      getCurrentWindow().listen("tauri://close-requested", () => {
         pause();
         writeCurrentTrackTimeToCache();
+
+        getCurrentWindow().destroy();
       });
     }
   });

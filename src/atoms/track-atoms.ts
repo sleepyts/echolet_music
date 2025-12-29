@@ -5,6 +5,8 @@ import { atomWithStorage } from "jotai/utils";
 import { PlayerState } from "./player-atoms";
 import { GlobalAudioFunc } from "@/lib/audio";
 import { FormatUtils, LocalStorageUtils } from "@/lib/utils";
+import { appStore } from "@/lib/store";
+import { toast } from "sonner";
 
 const GlobalAudio = new Audio();
 
@@ -22,12 +24,9 @@ interface TrackState {
 const CurrentTrackTimeAtom = atom<number>(0);
 
 const WriteCurrentTrackTimeToCacheAction = atom(null, (get, set) => {
-  LocalStorageUtils.writeLocalStorage(
-    APP_CONSTANTS.TRACK_PLAY_TIME_STORAGE_KEY,
-    {
-      currentTime: get(CurrentTrackTimeAtom),
-    }
-  );
+  appStore.set(APP_CONSTANTS.TRACK_PLAY_TIME_STORAGE_KEY, {
+    currentTime: get(CurrentTrackTimeAtom),
+  });
 });
 
 const CurrentTrackAtom = atomWithStorage<TrackState>(
@@ -37,36 +36,66 @@ const CurrentTrackAtom = atomWithStorage<TrackState>(
     playing: false,
     duration: 0,
     trackUrl: "",
+  },
+  {
+    setItem: async (key: string, value: TrackState) => {
+      await appStore.set(key, value);
+    },
+    getItem: async (key: string, initialValue: TrackState) => {
+      console.log(await appStore.get<TrackState>(key));
+      return (await appStore.get<TrackState>(key)) || initialValue;
+    },
+    removeItem: async (key: string) => {
+      await appStore.delete(key);
+    },
   }
 );
 
-const IsPlayingAtom = atom((get) => get(CurrentTrackAtom).playing);
+const IsPlayingAtom = atom(async (get) => {
+  const track = await get(CurrentTrackAtom);
+  return track?.playing || false;
+});
 
-const CurrentTrackIdAtom = atom((get) => get(CurrentTrackAtom).track?.id);
+const CurrentTrackIdAtom = atom(async (get) => {
+  const track = await get(CurrentTrackAtom);
+  return track?.track?.id;
+});
 
-const CurrentTrackDurationAtom = atom((get) => get(CurrentTrackAtom).duration);
+const CurrentTrackDurationAtom = atom(async (get) => {
+  const track = await get(CurrentTrackAtom);
+  return track?.duration || 0;
+});
 
-const CurrentTrackUrlAtom = atom((get) => get(CurrentTrackAtom).trackUrl);
+const CurrentTrackUrlAtom = atom(async (get) => {
+  const track = await get(CurrentTrackAtom);
+  return track?.trackUrl || "";
+});
 
 // start play a track when double click the track card
 const StartPlayAction = atom(
   null,
   async (get, set, track: any, playlistIds?: number[]) => {
-    const prevTrack = get(CurrentTrackAtom);
+    const prevTrack = await get(CurrentTrackAtom);
     const prevPlaylistIds = get(PlayerState.current).playlistIds;
 
-    GlobalAudioFunc.togglePlay(() =>
-      set(CurrentTrackAtom, {
-        ...prevTrack,
-        playing: false,
-        track,
-        currentTime: 0,
-        duration: FormatUtils.fromMsToSecond(track?.dt || 0),
-      })
-    );
-
     await TrackApis.getMusicUrl([track.id]).then((res: any) => {
-      GlobalAudioFunc.startANewTrack(res?.data?.[0]?.url || "", () => {
+      const url = res?.data?.[0]?.url || "";
+
+      if (!url) {
+        toast.error("未找到歌曲信息", { position: "top-right" });
+        return;
+      }
+
+      GlobalAudioFunc.togglePlay(() =>
+        set(CurrentTrackAtom, {
+          ...prevTrack,
+          playing: false,
+          track,
+          currentTime: 0,
+          duration: FormatUtils.fromMsToSecond(track?.dt || 0),
+        })
+      );
+      GlobalAudioFunc.startANewTrack(url, () => {
         set(CurrentTrackAtom, {
           ...prevTrack,
           playing: true,
@@ -86,8 +115,8 @@ const StartPlayAction = atom(
 );
 
 // pause current track when click pause button
-const PauseAction = atom(null, (get, set) => {
-  const prevTrack = get(CurrentTrackAtom);
+const PauseAction = atom(null, async (get, set) => {
+  const prevTrack = await get(CurrentTrackAtom);
 
   GlobalAudioFunc.togglePlay(() => {
     set(CurrentTrackAtom, {
@@ -98,8 +127,8 @@ const PauseAction = atom(null, (get, set) => {
 });
 
 // play current track when click play button
-const PlayAction = atom(null, (get, set) => {
-  const prevTrack = get(CurrentTrackAtom);
+const PlayAction = atom(null, async (get, set) => {
+  const prevTrack = await get(CurrentTrackAtom);
 
   GlobalAudioFunc.togglePlay(() => {
     set(CurrentTrackAtom, {
@@ -109,19 +138,25 @@ const PlayAction = atom(null, (get, set) => {
   });
 });
 
-const PlayNextAction = atom(null, (get, set, isBackward?: boolean) => {
-  const nextTrackId = set(PlayerState.generateNextTrackId, false, isBackward);
+const PlayNextAction = atom(null, async (get, set, isBackward?: boolean) => {
+  const nextTrackId = await set(
+    PlayerState.generateNextTrackId,
+    false,
+    isBackward
+  );
 
-  TrackApis.getTrackDetail([nextTrackId]).then((res: any) => {
+  await TrackApis.getTrackDetail([nextTrackId]).then((res: any) => {
     if (res?.songs?.[0]) {
       set(StartPlayAction, res?.songs?.[0]);
     }
   });
 });
 
-const ReloadGlobalAudioAction = atom(null, (get, set) => {
-  GlobalAudioFunc.loadUrl(get(CurrentTrackUrlAtom));
-  GlobalAudioFunc.jumpTo(get(CurrentTrackTimeAtom));
+const ReloadGlobalAudioAction = atom(null, async (get, set) => {
+  const trackUrl = await get(CurrentTrackUrlAtom);
+  GlobalAudioFunc.loadUrl(trackUrl);
+  const currentTrackTime = await get(CurrentTrackTimeAtom);
+  GlobalAudioFunc.jumpTo(currentTrackTime);
 });
 
 export const TrackState = {

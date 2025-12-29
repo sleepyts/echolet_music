@@ -8,6 +8,8 @@ export const BottomPlayer = () => {
   const currentTrack = useAtomValue(TrackState.CurrentTrack);
 
   if (!currentTrack || !currentTrack.track) {
+    console.log("currentTrack", currentTrack);
+
     return null;
   }
   const trackData = currentTrack?.track;
