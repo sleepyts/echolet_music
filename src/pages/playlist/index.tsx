@@ -1,9 +1,9 @@
 import { usePlaylistModel } from "./use-model";
 import { LongSongCard } from "@/components/long-song-card";
 import { LongSongCardContextMenu } from "@/components/long-song-card/components/context-menu";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useRef } from "react";
 import { PlaylistShortInfo } from "./components/playlist-short-info";
+import { usePlaylistSearch } from "./hooks/use-playlist-search";
 
 export const PlaylistPage = () => {
   const bottomLoadMoreRef = useRef<HTMLDivElement>(null);
@@ -13,6 +13,9 @@ export const PlaylistPage = () => {
       bottomLoadMoreRef,
     });
 
+  const { setSearch, playlistTracks: filteredTracks } = usePlaylistSearch({
+    playlistTracks,
+  });
   return (
     <div>
       {
@@ -21,10 +24,11 @@ export const PlaylistPage = () => {
           isLoading={loading}
           playlistIds={playlistIds}
           playlistTracks={playlistTracks}
+          setSearch={setSearch}
         />
       }
       {!loading
-        ? playlistTracks.map((track, index) => (
+        ? filteredTracks.map((track, index) => (
             <LongSongCardContextMenu track={track} playlistIds={playlistIds}>
               <LongSongCard
                 key={track.id}

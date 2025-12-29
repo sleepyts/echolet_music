@@ -19,5 +19,10 @@
   "playlist-short-info.dialog-title": "歌单简介",
   "playlist-short-info.create-at": "创建于",
   "playlist-short-info.play-all": "播放全部",
-  "playlist-short-info.subscribed": "收藏"
+  "playlist-short-info.subscribed": "收藏",
+
+  "search": "搜索",
+
+  "playlist-empty.title": "暂无歌曲",
+  "playlist-empty.subtitle": "尝试添加歌曲/搜索其他关键词"
 }

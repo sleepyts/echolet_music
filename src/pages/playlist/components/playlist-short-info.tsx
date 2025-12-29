@@ -3,6 +3,7 @@ import { UserInfoState } from "@/atoms/user-atoms";
 import { ArLink } from "@/components/ar-link";
 import TDialog from "@/components/TDialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlaylistTypeEnum } from "@/lib/enums";
 import { FormatUtils } from "@/lib/utils";
@@ -20,6 +21,7 @@ interface PlaylistShortInfoProps {
   playlistIds: number[];
   playlistTracks: any[];
   isLoading?: boolean;
+  setSearch: (search: string | undefined) => void;
 }
 
 export const PlaylistShortInfo = ({
@@ -27,6 +29,7 @@ export const PlaylistShortInfo = ({
   isLoading = false,
   playlistIds,
   playlistTracks,
+  setSearch,
 }: PlaylistShortInfoProps) => {
   if (isLoading && !playlistDetail?.name) {
     return <PlaylistShortInfoSkeleton />;
@@ -76,7 +79,7 @@ export const PlaylistShortInfo = ({
           </span>
         </div>
 
-        <div className="mt-auto flex items-center gap-2">
+        <div className="mt-auto flex items-center gap-2 w-full">
           <Button
             className="text-[14px] bg-primary text-primary-foreground  "
             variant={"shrink"}
@@ -99,6 +102,14 @@ export const PlaylistShortInfo = ({
               )}
             </Button>
           )}
+
+          <div className="flex items-center flex-1 ">
+            <Input
+              className="max-w-[200px] ml-auto"
+              placeholder={t("search")}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
         </div>
       </div>
     </div>
