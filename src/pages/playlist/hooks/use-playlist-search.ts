@@ -31,7 +31,7 @@ export const usePlaylistSearch = (props: IProps) => {
       );
     },
     [search, playlistTracks],
-    { wait: 500 }
+    { wait: search ? 500 : 0 }
   );
   return {
     search,
