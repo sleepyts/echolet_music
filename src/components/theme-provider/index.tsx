@@ -1,3 +1,4 @@
+import { appStore } from "@/lib/store";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
@@ -16,7 +17,18 @@ const initialState: ThemeProviderState = {
 const THEME_STORAGE_KEY = "ui-theme";
 export const themeProviderAtom = atomWithStorage<ThemeProviderState>(
   THEME_STORAGE_KEY,
-  initialState
+  initialState,
+  {
+    getItem: async (key: string, defaultValue: ThemeProviderState) => {
+      return (await appStore.get(key)) || defaultValue;
+    },
+    setItem: async (key: string, value: ThemeProviderState) => {
+      await appStore.set(key, value);
+    },
+    removeItem: async (key: string) => {
+      await appStore.delete(key);
+    },
+  }
 );
 export function useThemeProvider() {
   const [themeProviderState] = useAtom(themeProviderAtom);
@@ -33,12 +45,12 @@ export function useThemeProvider() {
         : "light";
 
       root.classList.add(systemTheme);
-      return;
+    } else {
+      root.classList.add(themeProviderState.theme);
     }
 
-    root.classList.add(themeProviderState.theme);
-
-    getCurrentWindow().setTheme(themeProviderState.theme);
-    localStorage.setItem(THEME_STORAGE_KEY, themeProviderState.theme);
+    getCurrentWindow().setTheme(
+      themeProviderState.theme === "system" ? null : themeProviderState.theme
+    );
   }, [themeProviderState]);
 }
