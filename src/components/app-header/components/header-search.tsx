@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SearchApis } from "@/apis/search";
+import { RouteUtils } from "@/lib/utils";
 
 export const HeaderSearch = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,6 +45,17 @@ export const HeaderSearch = () => {
 
   const handleClickSuggestion = useMemoizedFn((name: string) => {
     setSearchKeywords(name);
+    setIsOpen(false);
+
+    RouteUtils.go(`/search/${searchKeywords}`);
+  });
+
+  const handleSubmit = useMemoizedFn(() => {
+    if (!searchKeywords) {
+      return;
+    }
+    setIsOpen(false);
+    RouteUtils.go(`/search/${searchKeywords}`);
   });
 
   return (
@@ -60,7 +72,7 @@ export const HeaderSearch = () => {
             className="max-w-[200px] flex-1 "
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                console.log("submit");
+                handleSubmit();
               }
             }}
             value={searchKeywords}
@@ -76,26 +88,32 @@ export const HeaderSearch = () => {
               <Button
                 key={item.id}
                 variant={"ghost"}
+                className="p-0 h-[32px]"
                 onClick={() => handleClickSuggestion(item.name)}
               >
-                <SearchIcon className="size-4" />
-                <span className="truncate w-full text-left">{item.name}</span>
+                <SearchIcon className="size-2" />
+                <span className="truncate w-full text-left text-[12px]">
+                  {item.name}
+                </span>
               </Button>
             ))}
             {searchSuggestions?.artists?.map((item: any) => (
               <Button
                 key={item.id}
                 variant={"ghost"}
+                className="p-0 h-[32px]"
                 onClick={() => handleClickSuggestion(item.name)}
               >
-                <SearchIcon className="size-4" />
-                <span className="truncate w-full text-left">{item.name}</span>
+                <SearchIcon className="size-2" />
+                <span className="truncate w-full text-left text-[12px]">
+                  {item.name}
+                </span>
               </Button>
             ))}
           </div>
         </PopoverContent>
       </Popover>
-      <Button variant={"click-shrink"}>
+      <Button variant={"click-shrink"} onClick={handleSubmit}>
         <SearchIcon className="size-4" />
       </Button>
     </div>

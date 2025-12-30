@@ -19,7 +19,7 @@ export const router = createBrowserRouter([
         Component: PlaylistPage,
       },
       {
-        path: "search",
+        path: "search/:keywords",
         Component: SearchPage,
       },
     ],

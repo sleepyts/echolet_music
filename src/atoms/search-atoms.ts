@@ -13,4 +13,6 @@ export namespace SearchAtom {
     type: SearchType.Track,
     data: [],
   });
+
+  export const SearchKeywordsAtom = atom<string>("");
 }

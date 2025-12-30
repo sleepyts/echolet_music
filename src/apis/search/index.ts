@@ -2,12 +2,17 @@ import type { SearchType } from "@/lib/types";
 import { http } from "..";
 
 export namespace SearchApis {
-  export const search = (
-    keywords: string,
-    type: SearchType,
-    offset: number = 0,
-    limit: number = 30
-  ) => {
+  export const search = ({
+    keywords,
+    type,
+    offset = 0,
+    limit = 30,
+  }: {
+    keywords: string;
+    type: SearchType;
+    offset?: number;
+    limit?: number;
+  }) => {
     return http
       .get("cloudsearch", {
         searchParams: {

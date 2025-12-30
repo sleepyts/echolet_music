@@ -9,7 +9,6 @@ export const ArLink = ({ artits }: ArLinkProps) => {
     <span className="truncate min-w-0 text-[12px] font-medium text-muted-foreground">
       {artits.map((artist, index) => (
         <span
-          key={artist.id}
           className="hover:cursor-pointer hover:underline"
           onClick={() => RouteUtils.go(`/artist/${artist.id}`)}
         >

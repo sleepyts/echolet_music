@@ -24,5 +24,16 @@
   "search": "搜索",
 
   "playlist-empty.title": "暂无歌曲",
-  "playlist-empty.subtitle": "尝试添加歌曲/搜索其他关键词"
+  "playlist-empty.subtitle": "尝试添加歌曲/搜索其他关键词",
+
+  "search-type.track": "单曲",
+  "search-type.artist": "歌手",
+  "search-type.playlist": "歌单",
+  "search-type.album": "专辑",
+  "search-type.comprehensive": "综合",
+  "search-type.mv": "MV",
+  "search-type.video": "视频",
+  "search-type.user": "用户",
+  "search-type.lyric": "歌词",
+  "search-type.voice": "语音"
 }

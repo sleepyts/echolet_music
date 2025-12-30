@@ -23,6 +23,6 @@ export enum SearchType {
   MV = 1004,
   Lyric = 1006,
   Video = 1014,
-  Compilation = 1018,
+  Comprehensive = 1018,
   Voice = 2000,
 }
