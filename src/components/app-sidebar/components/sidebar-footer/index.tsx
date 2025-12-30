@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useAtomValue } from "jotai";
 import { Github, Settings } from "lucide-react";
+import { ModeToggle } from "./theme-toggle";
 
 const SidebarFooter = () => {
   const isLogin = useAtomValue(UserInfoState.isLogin);
@@ -29,6 +30,7 @@ const SidebarFooter = () => {
           <Button variant={"ghost"}>
             <Settings />
           </Button>
+          <ModeToggle />
           <Button
             variant={"ghost"}
             onClick={() => {
