@@ -35,4 +35,8 @@ export namespace SearchApis {
       })
       .json();
   };
+
+  export const defaultSearchKeywords = () => {
+    return http.get("search/default").json();
+  };
 }

@@ -1,5 +1,12 @@
-import { useCreation, useInViewport, useRequest } from "ahooks";
-import { useEffect, useState } from "react";
+import { DomUtils } from "@/lib/utils";
+import {
+  useAsyncEffect,
+  useCreation,
+  useInViewport,
+  useRequest,
+  useUpdateEffect,
+} from "ahooks";
+import { useEffect, useMemo, useState } from "react";
 
 interface IProps {
   // request function to fetch data
@@ -22,9 +29,6 @@ interface IProps {
 
   // custom arguments to pass to request function (except page and offset)
   customArgs?: any;
-
-  // single skeleton component to show when loading first time
-  singleSkeleton?: React.ReactNode;
 }
 
 export const usePaginationRequest = (props: IProps) => {
@@ -45,9 +49,9 @@ export const usePaginationRequest = (props: IProps) => {
 
   const [firstLoading, setFirstLoading] = useState(true);
 
-  const offset = useCreation(() => (page - 1) * limit, [page, limit]);
+  const offset = useMemo(() => (page - 1) * limit, [page, limit]);
   const { run: fetchMore, loading } = useRequest(
-    () => request({ ...customArgs, page, offset }),
+    () => request({ ...customArgs, page, offset: firstLoading ? 0 : offset }),
     {
       manual: true,
       onSuccess: (res: any) => {
@@ -63,15 +67,22 @@ export const usePaginationRequest = (props: IProps) => {
     }
   );
 
-  useEffect(() => {
+  useAsyncEffect(async () => {
     setPage(1);
+    setFirstLoading(true);
     setData(undefined);
+    setTotal(0);
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
     fetchMore();
+
+    DomUtils.scrollAppMainContainerToTop();
   }, [...resetDeps]);
 
   const [bottomInView] = useInViewport(bottomRef);
 
-  useEffect(() => {
+  useUpdateEffect(() => {
+    console.log(bottomInView, loading, data?.length, total, firstLoading);
     if (
       bottomInView &&
       !loading &&
@@ -80,7 +91,7 @@ export const usePaginationRequest = (props: IProps) => {
     ) {
       fetchMore();
     }
-  }, [bottomInView, loading, data?.length, total, firstLoading]);
+  }, [bottomInView]);
 
   return {
     data,

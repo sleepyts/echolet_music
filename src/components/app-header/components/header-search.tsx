@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { useDebounceEffect, useFocusWithin, useMemoizedFn } from "ahooks";
+import {
+  useDebounceEffect,
+  useFocusWithin,
+  useMemoizedFn,
+  useRequest,
+} from "ahooks";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SearchIcon } from "lucide-react";
@@ -16,6 +21,7 @@ export const HeaderSearch = () => {
   const [searchRef, setSearchRef] = useState<HTMLInputElement>();
 
   const [searchKeywords, setSearchKeywords] = useState("");
+  const [defaultSearchKeywords, setDefaultSearchKeywords] = useState("");
 
   const [searchSuggestions, setSearchSuggestions] = useState<any | undefined>(
     undefined
@@ -51,11 +57,18 @@ export const HeaderSearch = () => {
   });
 
   const handleSubmit = useMemoizedFn(() => {
-    if (!searchKeywords) {
-      return;
+    let keywords = searchKeywords || defaultSearchKeywords;
+    if (!keywords) {
+      keywords = defaultSearchKeywords;
     }
     setIsOpen(false);
-    RouteUtils.go(`/search/${searchKeywords}`);
+    RouteUtils.go(`/search/${keywords}`);
+  });
+
+  useRequest(() => SearchApis.defaultSearchKeywords(), {
+    onSuccess: (res: any) => {
+      setDefaultSearchKeywords(res?.data.styleKeyword.keyWord || "");
+    },
   });
 
   return (
@@ -68,7 +81,7 @@ export const HeaderSearch = () => {
         >
           <Input
             ref={(el) => setSearchRef(el!)}
-            placeholder="搜索"
+            placeholder={defaultSearchKeywords || "搜索"}
             className="max-w-[200px] flex-1 "
             onKeyDown={(e) => {
               if (e.key === "Enter") {

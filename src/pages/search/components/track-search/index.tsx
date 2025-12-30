@@ -32,14 +32,19 @@ export const TrackSearch = (props: IProps) => {
 
   return (
     <div>
-      {data?.map((item: any, index: number) => (
-        <LongSongCard
-          key={item.id}
-          track={item}
-          index={index + 1}
-          playlistIds={trackIds}
-        />
-      ))}
+      {!data || firstLoading
+        ? Array.from({ length: 15 }).map((_, index) => (
+            <LongSongCard key={index} isLoading={true} />
+          ))
+        : data?.map((item: any, index: number) => (
+            <LongSongCard
+              key={item.id}
+              track={item}
+              index={index + 1}
+              playlistIds={trackIds}
+            />
+          ))}
+
       <div ref={bottomRef} />
     </div>
   );

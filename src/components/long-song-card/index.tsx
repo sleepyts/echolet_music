@@ -81,17 +81,19 @@ export const LongSongCard = ({
 
 const LongSongCardSkeleton = ({ index }: { index?: number }) => {
   return (
-    <div className="flex items-center gap-4 w-full mb-2 h-fit p-2">
-      <div className="w-[12px] text-left text-sm">{index}</div>
+    <div className="flex items-center gap-4 w-full mb-2 h-[64px] px-4">
+      <div className="w-[12px] text-center mr-2 text-sm text-muted-foreground">
+        {index}
+      </div>
       <div className="flex-[1.5] flex flex-row min-w-0 items-center">
-        <Skeleton className="rounded-[4px] w-12 h-12" />
-        <div className="flex flex-col ml-3 space-y-2">
+        <Skeleton className="rounded-[4px] w-12 h-12 flex-shrink-0" />
+        <div className="flex flex-col ml-3 space-y-2 overflow-hidden">
           <Skeleton className="h-4 w-32 rounded" />
           <Skeleton className="h-3 w-24 rounded" />
         </div>
       </div>
-      <div className="flex-1">
-        <Skeleton className="h-3 w-20 rounded" />
+      <div className="flex-2">
+        <Skeleton className="h-3 w-32 rounded" />
       </div>
       <div className="flex-1 flex justify-end">
         <Skeleton className="h-3 w-10 rounded" />
