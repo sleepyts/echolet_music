@@ -4,7 +4,7 @@ import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { PlayerState } from "./player-atoms";
 import { GlobalAudioFunc } from "@/lib/audio";
-import { FormatUtils, LocalStorageUtils } from "@/lib/utils";
+import { FormatUtils } from "@/lib/utils";
 import { appStore } from "@/lib/store";
 import { toast } from "sonner";
 

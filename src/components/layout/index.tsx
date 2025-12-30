@@ -2,14 +2,14 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { SidebarProvider } from "../ui/sidebar";
 import { AppSidebar } from "../app-sidebar";
 import { navigatorRef } from "@/lib/utils";
-import { AppHeader } from "../app-header/indext";
 import { BottomPlayer } from "../bottom-player";
 import { APP_CONSTANTS } from "@/lib/consts";
 import { Toaster } from "sonner";
+import { AppHeader } from "../app-header";
 export const Layout = () => {
   const navigate = useNavigate();
 
-  // ts-ignore 忽略 navigatorRef.current 只读属性
+  // @ts-ignore 忽略 navigatorRef.current 只读属性
   navigatorRef.current = navigate;
 
   return (
